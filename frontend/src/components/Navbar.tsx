@@ -1,5 +1,4 @@
 import { Button, Container, Flex, HStack, Text } from "@chakra-ui/react";
-import { useState } from "react";
 import { BiMoon, BiPlusCircle, BiSun } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useColorMode } from "@/components/ui/color-mode";
