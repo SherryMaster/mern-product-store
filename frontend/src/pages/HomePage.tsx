@@ -43,13 +43,16 @@ const HomePage = (_props: Props) => {
             w="full"
             alignItems="stretch"
           >
-            {products.map((product) => (
+            <For each={products}>
+            {(product) => (
               <ProductCard
                 product={product}
                 onDelete={() => deleteProduct(product._id)}
                 key={product._id}
               />
-            ))}
+            )}
+
+            </For>
           </SimpleGrid>
         ) : (
           <Text

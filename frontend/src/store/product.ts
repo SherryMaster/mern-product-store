@@ -7,6 +7,7 @@ type ProductStore = {
   createProduct: (product: Product) => Promise<ProductResponse>;
   fetchProducts: () => Promise<void>;
   deleteProduct: (productId: string) => Promise<ProductResponse>;
+  updateProduct: (product: Product) => Promise<ProductResponse>;
 };
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -24,6 +25,9 @@ export const useProductStore = create<ProductStore>((set) => ({
       body: JSON.stringify(product),
     });
     const data = await response.json();
+    if (!data.success) {
+      return { success: false, message: data.message };
+    }
     set((state: ProductStore) => ({
       products: [...state.products, data.data],
     }));
@@ -48,6 +52,26 @@ export const useProductStore = create<ProductStore>((set) => ({
     }
     set((state: ProductStore) => ({
       products: state.products.filter((product) => product._id !== productId),
+    }));
+    return {
+      success: true,
+      message: data.message,
+    };
+  },
+  updateProduct: async (product: Product) => {
+    const response = await fetch(`/api/products/${product._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(product),
+    });
+    const data = await response.json();
+    if (!data.success) {
+      return { success: false, message: data.message };
+    }
+    set((state: ProductStore) => ({
+      products: state.products.map((p) => (p._id === product._id ? product : p)),
     }));
     return {
       success: true,
