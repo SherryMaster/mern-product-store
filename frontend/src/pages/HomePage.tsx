@@ -14,9 +14,7 @@ import { Link as RouterLink } from "react-router-dom";
 type Props = {};
 
 const HomePage = (_props: Props) => {
-  const products = useProductStore((state) => state.products);
-  const fetchProducts = useProductStore((state) => state.fetchProducts);
-  const deleteProduct = useProductStore((state) => state.deleteProduct);
+  const { products, fetchProducts, deleteProduct } = useProductStore();
 
   useEffect(() => {
     fetchProducts();

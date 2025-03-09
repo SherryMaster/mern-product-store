@@ -43,6 +43,9 @@ export const useProductStore = create<ProductStore>((set) => ({
       method: "DELETE",
     });
     const data = await response.json();
+    if (!data.success) {
+      return { success: false, message: data.message };
+    }
     set((state: ProductStore) => ({
       products: state.products.filter((product) => product._id !== productId),
     }));
