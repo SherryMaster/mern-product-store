@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Product, ProductResponse } from "@/types/product";
+import { Product, ProductResponse } from "@/types";
 
 type ProductStore = {
   products: Product[];
@@ -29,7 +29,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     }));
     return {
       success: true,
-      message: "Product created successfully",
+      message: data.message,
       data: data.data,
     };
   },
@@ -38,7 +38,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     const data = await response.json();
     set({ products: data.data });
   },
-  deleteProduct: async (productId: string) =>{
+  deleteProduct: async (productId: string) => {
     const response = await fetch(`/api/products/${productId}`, {
       method: "DELETE",
     });
@@ -48,7 +48,7 @@ export const useProductStore = create<ProductStore>((set) => ({
     }));
     return {
       success: true,
-      message: "Product deleted successfully",
+      message: data.message,
     };
-  }
+  },
 }));

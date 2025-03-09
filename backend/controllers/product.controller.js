@@ -21,7 +21,11 @@ export const updateProduct = async (req, res) => {
         .status(404)
         .json({ success: false, message: "Product not found" });
     }
-    res.json({ success: true, data: updatedProduct });
+    res.json({
+      success: true,
+      data: updatedProduct,
+      message: "Product updated successfully",
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -39,7 +43,13 @@ export const createProduct = async (req, res) => {
 
   try {
     await newProduct.save();
-    res.status(201).json({ success: true, data: newProduct });
+    res
+      .status(201)
+      .json({
+        success: true,
+        data: newProduct,
+        message: "Product created successfully",
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
