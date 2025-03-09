@@ -9,19 +9,16 @@ import {
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { useProductStore } from "@/store/product";
-import { toaster, Toaster } from "@/components/ui/toaster";
+import { toaster } from "@/components/ui/toaster";
+import { Product } from "@/types/product"; // Import the correct Product type
 
 type Props = {};
 
-type Product = {
-  id?: string;
-  name: string;
-  price: number;
-  image: string;
-};
+// Create a type for the form state without required fields
+type ProductForm = Omit<Product, '_id' | 'createdAt' | 'updatedAt'>;
 
 const CreatePage = (_props: Props) => {
-  const [product, setProduct] = useState<Product>({
+  const [product, setProduct] = useState<ProductForm>({
     name: "",
     price: 0,
     image: "",
@@ -29,8 +26,8 @@ const CreatePage = (_props: Props) => {
 
   const createProduct = useProductStore((state) => state.createProduct);
 
-  const handleCreateProduct = async (product: Product) => {
-    const { success, message } = await createProduct(product);
+  const handleCreateProduct = async (product: ProductForm) => {
+    const { success, message } = await createProduct(product as Product);
     setProduct({ name: "", price: 0, image: "" });
     toaster.create({
       title: success ? "Success" : "Error",
@@ -42,7 +39,6 @@ const CreatePage = (_props: Props) => {
 
   return (
     <Container maxW={"md"}>
-      <Toaster />
       <VStack py={"6"}>
         <Heading as="h1" size="2xl" textAlign="center" mb="8">
           Create New Product

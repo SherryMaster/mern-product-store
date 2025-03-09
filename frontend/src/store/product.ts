@@ -1,20 +1,12 @@
 import { create } from "zustand";
-
-type Product = {
-  id?: string; // Make id optional by adding ? to the type definition to avoid errors in the store when creating a new product
-  name: string;
-  price: number;
-  image: string;
-};
+import { Product, ProductResponse } from "@/types/product";
 
 type ProductStore = {
   products: Product[];
   setProducts: (products: Product[]) => void;
-  createProduct: (product: Product) => Promise<{
-    success: boolean;
-    message?: string;
-    data?: Product;
-  }>;
+  createProduct: (product: Product) => Promise<ProductResponse>;
+  fetchProducts: () => Promise<void>;
+  deleteProduct: (productId: string) => Promise<ProductResponse>;
 };
 
 export const useProductStore = create<ProductStore>((set) => ({
@@ -41,4 +33,22 @@ export const useProductStore = create<ProductStore>((set) => ({
       data: data.data,
     };
   },
+  fetchProducts: async () => {
+    const response = await fetch("/api/products");
+    const data = await response.json();
+    set({ products: data.data });
+  },
+  deleteProduct: async (productId: string) =>{
+    const response = await fetch(`/api/products/${productId}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+    set((state: ProductStore) => ({
+      products: state.products.filter((product) => product._id !== productId),
+    }));
+    return {
+      success: true,
+      message: "Product deleted successfully",
+    };
+  }
 }));
