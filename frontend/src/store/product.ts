@@ -38,9 +38,20 @@ export const useProductStore = create<ProductStore>((set) => ({
     };
   },
   fetchProducts: async () => {
-    const response = await fetch("/api/products");
-    const data = await response.json();
-    set({ products: data.data });
+    try {
+      const response = await fetch("/api/products");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch products');
+      }
+      set({ products: data.data });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      set({ products: [] });
+    }
   },
   deleteProduct: async (productId: string) => {
     const response = await fetch(`/api/products/${productId}`, {

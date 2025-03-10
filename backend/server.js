@@ -6,12 +6,15 @@ import path from "path";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000; // Default port is 5000 in case the environment variable is not set.
+const PORT = process.env.PORT || 5000;
 
 const app = express();
-app.use(express.json()); // This middleware parses the json data from request body to req.body object.
+app.use(express.json());
 
 const _dirname = path.resolve();
+
+// API routes should be defined BEFORE the static file handling
+app.use("/api/products", productRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(_dirname, "frontend/dist")));
@@ -20,12 +23,6 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(_dirname, "frontend/dist/index.html"));
   });
 }
-
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
-
-app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   connentDB();
