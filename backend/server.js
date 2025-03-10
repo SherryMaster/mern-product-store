@@ -11,11 +11,13 @@ const PORT = process.env.PORT || 5000; // Default port is 5000 in case the envir
 const app = express();
 app.use(express.json()); // This middleware parses the json data from request body to req.body object.
 
+const _dirname = path.resolve();
+
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(path.resolve(), "frontend", "dist")));
+  app.use(express.static(path.join(_dirname, "frontend/dist")));
 
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve("frontend", "dist", "index.html"));
+    res.sendFile(path.resolve(_dirname, "frontend/dist/index.html"));
   });
 }
 
